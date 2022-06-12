@@ -40,10 +40,10 @@ typedef struct _EncodeInfo
 /* Encoding function prototype */
 
 /* Check operation type */
-OperationType check_operation_type(char *argv[]);
+OperationType check_operation_type(int argc, char *argv[]);
 
 /* Read and validate Encode args from argv */
-Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo);
+Status read_and_validate_encode_args(char *argv[], EncodeInfo *encInfo, int argc);
 
 /* Perform the encoding */
 Status do_encoding(EncodeInfo *encInfo);
@@ -55,7 +55,7 @@ Status open_files(EncodeInfo *encInfo);
 Status check_capacity(EncodeInfo *encInfo);
 
 /* Get image size */
-uint get_image_size_for_bmp(FILE *fptr_image);
+uint get_image_size_for_bmp(FILE *fptr_image,EncodeInfo *encInfo );
 
 /* Get file size */
 uint get_file_size(FILE *fptr);

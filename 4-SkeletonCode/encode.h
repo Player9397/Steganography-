@@ -22,6 +22,7 @@ typedef struct _EncodeInfo
     uint image_capacity;
     uint bits_per_pixel;
     char image_data[MAX_IMAGE_BUF_SIZE];
+    char image_32B_buffer[32];
 
     /* Secret File Info */
     char *secret_fname;
@@ -35,6 +36,17 @@ typedef struct _EncodeInfo
     FILE *fptr_stego_image;
 
 } EncodeInfo;
+
+typedef struct _DecodeInfo
+{
+    char *decode_fname;
+    FILE *fptr_decode_image;
+    char *extension_name;
+    char *secret_text;
+    char buffer[8];
+    char buffer_32B[32];
+
+} DecodeInfo;
 
 
 /* Encoding function prototype */
@@ -58,13 +70,13 @@ Status check_capacity(EncodeInfo *encInfo);
 uint get_image_size_for_bmp(FILE *fptr_image,EncodeInfo *encInfo );
 
 /* Get file size */
-uint get_file_size(FILE *fptr);
+uint get_textfile_size(FILE *fptr, EncodeInfo *encInfo);
 
 /* Copy bmp image header */
 Status copy_bmp_header(FILE *fptr_src_image, FILE *fptr_dest_image);
 
 /* Store Magic String */
-Status encode_magic_string(const char *magic_string, EncodeInfo *encInfo);
+Status encode_string(const char *string, int len, EncodeInfo *encInfo,const char *success_str);
 
 /* Encode secret file extenstion */
 Status encode_secret_file_extn(const char *file_extn, EncodeInfo *encInfo);
@@ -84,4 +96,23 @@ Status encode_byte_to_lsb(char data, char *image_buffer);
 /* Copy remaining image bytes from src to stego image after encoding */
 Status copy_remaining_img_data(FILE *fptr_src, FILE *fptr_dest);
 
+/* Close all the files */
+Status close_all_files(EncodeInfo *encInfo);
+
+/* Validate the decode operation by finding magic string*/
+Status validate_decode_file(DecodeInfo *decInfo);
+
+Status decode_open_files(DecodeInfo *decInfo);
+
+Status read_and_validate_decode_args(char *argv[], DecodeInfo *decInfo, int argc);
+
+char decode_byte_from_lsb(char *image_buffer);
+
+Status encode_int_to_lsb(unsigned int data, char *image_buffer);
+
+Status encode_integer(const int num, EncodeInfo *encInfo, const char *success_str);
+
+Status decode_file(DecodeInfo *decInfo);
+
+unsigned int decode_integer_from_lsb(char *image_buffer);
 #endif

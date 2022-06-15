@@ -3,13 +3,6 @@
 
 #include "types.h" // Contains user defined types
 
-/* 
- * Structure to store information required for
- * encoding secret file to source Image
- * Info about output and intermediate data is
- * also stored
- */
-
 #define MAX_SECRET_BUF_SIZE 1
 #define MAX_IMAGE_BUF_SIZE (MAX_SECRET_BUF_SIZE * 8)
 #define MAX_FILE_SUFFIX 4
@@ -49,7 +42,7 @@ typedef struct _DecodeInfo
 } DecodeInfo;
 
 
-/* Encoding function prototype */
+/*function prototype */
 
 /* Check operation type */
 OperationType check_operation_type(int argc, char *argv[]);
@@ -94,7 +87,7 @@ Status encode_data_to_image(char *data, int size, FILE *fptr_src_image, FILE *fp
 Status encode_byte_to_lsb(char data, char *image_buffer);
 
 /* Copy remaining image bytes from src to stego image after encoding */
-Status copy_remaining_img_data(FILE *fptr_src, FILE *fptr_dest);
+Status copy_remaining_img_data(EncodeInfo *encInfo);
 
 /* Close all the files */
 Status close_all_files(EncodeInfo *encInfo);
@@ -102,17 +95,27 @@ Status close_all_files(EncodeInfo *encInfo);
 /* Validate the decode operation by finding magic string*/
 Status validate_decode_file(DecodeInfo *decInfo);
 
+/* openn the files required for decode operation */
 Status decode_open_files(DecodeInfo *decInfo);
 
+/* read and validate arguments in decode operation */
 Status read_and_validate_decode_args(char *argv[], DecodeInfo *decInfo, int argc);
 
+/* decode a byte from a image buffer of 8Bytes */
 char decode_byte_from_lsb(char *image_buffer);
 
+/* Encode Integer to the LSB of Image*/
 Status encode_int_to_lsb(unsigned int data, char *image_buffer);
 
+/* write the updated value to the image */
 Status encode_integer(const int num, EncodeInfo *encInfo, const char *success_str);
 
+/* Function to decode the image */
 Status decode_file(DecodeInfo *decInfo);
 
+/* decode integer value from LSB */ 
 unsigned int decode_integer_from_lsb(char *image_buffer);
+
+/* Read the secret text from file */
+void read_secret_text(EncodeInfo *encInfo, char text[]);
 #endif

@@ -4,15 +4,6 @@
 #include "encode.h"
 #include "types.h"
 
-/* Function Definitions */
-
-/* Get image size
- * Input: Image file ptr
- * Output: width * height * bytes per pixel (3 in our case)
- * Description: In BMP Image, width is stored in offset 18,
- * and height after that. size is 4 bytes
- */
-
 OperationType check_operation_type(int argc, char *argv[])
 {  
     int st_found = 0;
@@ -135,13 +126,7 @@ Status close_all_files(EncodeInfo *encInfo)
     if (encInfo->fptr_stego_image)
         fclose(encInfo->fptr_stego_image);    
 }
-/* 
- * Get File pointers for i/p and o/p files
- * Inputs: Src Image file, Secret file and
- * Stego Image file
- * Output: FILE pointer for above files
- * Return Value: e_success or e_failure, on file errors
- */
+ 
 Status open_files(EncodeInfo *encInfo)
 {
     // Src Image file
@@ -219,7 +204,7 @@ Status validate_decode_file(DecodeInfo *decInfo)
     }
     //fread(m_string, sizeof(char), 2, decInfo->fptr_decode_image);
     if (!strcmp(m_string, "#*"))
-        printf("File validation successful\nInitiating decoding sequence");
+        printf("File validation successful\nInitiating decoding sequence...\n");
     else
     {
         printf("Unable to validate file.\nAborting Operation");
@@ -273,7 +258,6 @@ char decode_byte_from_lsb(char *image_buffer)
 
 Status encode_int_to_lsb(unsigned int data, char *image_buffer)
 {
-    printf("data :%x\n",data);
     for (int i = 0; i < 32 ; ++i)
     {
         unsigned int mask = 1 << (31 - i);
@@ -311,7 +295,6 @@ Status decode_file(DecodeInfo *decInfo)
     // read the ext_size
     fread(decInfo->buffer_32B,sizeof(char),32,decInfo->fptr_decode_image);
     ext_size = decode_integer_from_lsb(decInfo->buffer_32B);
-    printf("ext_size retrieved : %u\n", ext_size);
     // read the extension name 
     fread(decInfo->buffer_32B,sizeof(char),32,decInfo->fptr_decode_image);
     decInfo->extension_name = ".txt";
@@ -331,4 +314,36 @@ Status decode_file(DecodeInfo *decInfo)
     printf("decoded Txt : %s\n", decInfo->secret_text);
     
     return (e_success);
+}
+
+void read_secret_text(EncodeInfo *encInfo, char text[])
+{
+    fseek(encInfo->fptr_secret, 0, SEEK_SET);
+    char ch;
+    while (ch = fgetc(encInfo->fptr_secret))
+    {
+        if (ch != EOF)
+            strncat(text, &ch, 1);
+        else
+            break;
+    }
+    printf("SecretText : %s\n", text);
+
+} 
+
+Status copy_remaining_img_data(EncodeInfo *encInfo)
+{
+    long int file_pos;
+    char ch;
+    fseek(encInfo->fptr_stego_image, 0, SEEK_END);
+    file_pos = ftell(encInfo->fptr_stego_image);
+    fseek(encInfo->fptr_src_image, 0, file_pos);
+    printf("file pos:%ld\n", file_pos);
+    long int n = encInfo->image_capacity - file_pos;
+    while (n--)
+    {
+        fread(&ch, sizeof(char), 1, encInfo->fptr_src_image);
+        fwrite(&ch, sizeof(char), 1, encInfo->fptr_stego_image);
+    }
+    
 }

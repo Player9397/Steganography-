@@ -19,6 +19,6 @@ USAGE        ::
 
         Decode Operation
         ./a.out -d <filename>.bmp
-                ***** The secret message is displayed *****
+                ****** The secret message is displayed ******
 
 

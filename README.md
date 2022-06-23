@@ -19,13 +19,13 @@ is provided. Alternatively, own images can be used.
     Stego -e <filename>.bmp -st <secret_filename>.text
 ```
 
+![Alt text](/resource/encode.jpg?raw=true "Screenshot")
+
 Decrypt the encrypted image
 
 ```bash
     Stego -d <filename>.bmp
 ```
 
-## Screenshots
-
 ![Alt text](/resource/decode.jpg?raw=true "Screenshot")
-![Alt text](/resource/encode.jpg?raw=true "Screenshot")
+

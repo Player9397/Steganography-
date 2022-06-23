@@ -1,24 +1,28 @@
-COMMAND NAME :: ./a.out ( compiled default output )
-DESCRIPTION  :: Used to encode/decode the secret message and/or hide in another file 
-USAGE        :: 
-        
-        -e   -->  encode followed by file_name of the file to be encoded
-        -d   -->  decode followed by the file_name to be decoded 
-        -st  -->  denotes the secret text file
 
-        Encode Operation
-        ./a.out -e <filename>.bmp -st <secret_filename>.text
-                *** It generates a new .bmp file (Stego.bmp as Default) where the secret text is encoded.
-        
-                Secret text format
-                <Magic String #* (16Bytes)>
-                <extension size(32Bytes)>
-                <extension (depends on extension size)>
-                <secrettext size( 32Bytes )>
-                <secret data>        
+# LSB Based Image Steganography
 
-        Decode Operation
-        ./a.out -d <filename>.bmp
-                ****** The secret message is displayed ******
+Used to encode/decode the secret message and/or hide in another file
+
+
+## Run Locally
+
+Compile all the .c files in one go with GCC Compiler. 
+
+```bash
+    gcc *.c -o Stego
+```
+
+Encrypt the Image with the Secret text. Default image and secret text file 
+is provided. Alternatively, own images can be used.
+
+```bash
+    Stego -e <filename>.bmp -st <secret_filename>.text
+```
+
+Decrypt the encrypted image
+
+```bash
+    Stego -d <filename>.bmp
+```
 
 

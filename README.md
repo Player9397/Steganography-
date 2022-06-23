@@ -24,5 +24,5 @@ Decrypt the encrypted image
 ```bash
     Stego -d <filename>.bmp
 ```
-
+![Alt text](/resource/decode.jpg?raw=true "Screenshot")
 
